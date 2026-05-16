@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toko Ai - Solusi Digital Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #0a0118;
+            --accent-blue: #3b82f6;
+            --accent-purple: #a855f7;
+            --card-dark: rgba(255, 255, 255, 0.03);
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(59, 130, 246, 0.15) 0%, rgba(10, 1, 24, 1) 70%);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
+        }
+        .glass-nav {
+            background: rgba(10, 1, 24, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .pedestal {
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.2) 0%, rgba(168, 85, 247, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform: perspective(1000px) rotateX(60deg);
+        }
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .product-card {
+            background: var(--card-dark);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .nav-item::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width .3s;
+        }
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        .payment-chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 32px;
+            width: 70px;
+            color: #94a3b8;
+        }
+        .btn-buy {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+            transition: all 0.3s ease;
+        }
+        .btn-buy:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #a855f7 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+        .image-glow {
+            position: relative;
+        }
+        .image-glow::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            filter: blur(20px);
+            opacity: 0.2;
+            z-index: -1;
+            border-radius: 40px;
+        }
+        .product-img-container {
+            width: 100%;
+            height: 120px;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+            cursor: pointer;
+        }
+        .product-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        .product-card:hover .product-img-container img {
+            transform: scale(1.1);
+        }
+        
+        .zoom-left-top img {
+            object-position: left top;
+            transform: scale(2.2);
+            transform-origin: top left;
+        }
+        .product-card:hover .zoom-left-top img {
+            transform: scale(2.4);
+        }
+
+        #imageModal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-enter {
+            animation: modalZoom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        @keyframes modalZoom {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .img-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        .product-img-container:hover .img-overlay {
+            background: rgba(59, 130, 246, 0.4);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-[#0a0118] text-white overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 glass-nav py-4 transition-all duration-300">
+        <div class="container mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/logo_create_1777220601138_0.png" alt="Toko Ai Logo" class="w-10 h-10 object-contain rounded-lg">
+                <span class="text-white text-2xl font-extrabold tracking-tight">tokoai<span class="text-blue-400">.id</span></span>
+            </div>
+            
+            <div class="hidden lg:flex items-center gap-8">
+                <a href="#" class="text-white font-medium hover:text-blue-400 transition-colors nav-item">Beranda</a>
+                <a href="#tentang" class="text-slate-300 font-medium hover:text-blue-400 transition-colors nav-item">Tentang</a>
+                <a href="#produk" class="text-slate-300 font-medium hover:text-blue-400 transition-colors nav-item">Produk</a>
+                <a href="#testimoni" class="text-slate-300 font-medium hover:text-blue-400 transition-colors nav-item">Testimoni</a>
+                <a href="#kontak" class="text-slate-300 font-medium hover:text-blue-400 transition-colors nav-item">Hubungi Kami</a>
+            </div>
+
+            <div class="flex items-center">
+                <a href="#produk" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all">
+                    Mulai Belanja
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-gradient pt-48 pb-32 relative overflow-hidden">
+        <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+            <div class="fade-up visible">
+                <span class="inline-block px-4 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-600/30 rounded-full text-xs font-bold mb-6">
+                    Pusat Lisensi Digital & Layanan Kreatif
+                </span>
+                <h1 class="text-5xl lg:text-7xl font-extrabold text-white leading-tight mb-6">
+                    Solusi Digital,<br>
+                    <span class="text-gradient">Tanpa Batas</span>
+                </h1>
+                <p class="text-slate-400 text-lg mb-10 max-w-lg leading-relaxed">
+                    Temukan berbagai produk digital terbaik dan layanan profesional untuk mendukung produktivitas dan pertumbuhan bisnis Anda secara instan.
+                </p>
+                
+                <div class="flex flex-col sm:flex-row gap-6 mb-12">
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-blue-600/20 flex items-center justify-center text-blue-400 border border-blue-500/30 shadow-[0_0_20px_rgba(59,130,246,0.3)]">
+                            <i class="fa-solid fa-shield-halved text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Aman & Terpercaya</h4>
+                            <p class="text-slate-500 text-xs">Transaksi dengan sistem enkripsi</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-600/20 flex items-center justify-center text-purple-400 border border-purple-500/30">
+                            <i class="fa-solid fa-bolt text-2xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-white font-bold text-sm">Instant Delivery</h4>
+                            <p class="text-slate-500 text-xs">Produk dikirim otomatis seketika</p>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="#produk" class="btn-primary inline-flex px-8 py-4 rounded-2xl text-white font-bold items-center gap-3">
+                    Jelajahi Produk <i class="fa-solid fa-chevron-right text-xs"></i>
+                </a>
+            </div>
+
+            <div class="relative flex justify-center items-center h-[500px]">
+                <div class="absolute bottom-10 w-80 h-80 pedestal rounded-full shadow-[0_0_100px_rgba(59,130,246,0.3)]"></div>
+                <div class="absolute bottom-20 w-64 h-64 pedestal rounded-full opacity-50"></div>
+                
+                <div class="relative z-10 floating">
+                    <div class="w-64 h-64 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 p-1 shadow-[0_0_50px_rgba(59,130,246,0.5)]">
+                        <div class="w-full h-full rounded-full bg-[#0a0118] flex items-center justify-center relative overflow-hidden">
+                            <!-- Animasi Bulat Profile Update -->
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/foto%20profil.png" alt="Toko Ai Founder" class="w-full h-full object-cover relative z-20">
+                            <div class="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-ping"></div>
+                <div class="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="tentang" class="py-24 bg-[#0d0221]">
+        <div class="container mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="relative fade-up flex justify-center">
+                    <div class="image-glow w-full max-w-md lg:max-w-full">
+                        <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/tentang.png" 
+                             alt="Tentang Toko Ai" 
+                             class="rounded-[40px] shadow-2xl w-full object-cover transform transition-transform duration-500 hover:scale-[1.02] border border-white/10 clickable-img cursor-zoom-in">
+                    </div>
+                </div>
+                
+                <div class="fade-up">
+                    <span class="text-blue-400 font-bold uppercase tracking-widest text-sm">Tentang Toko Ai</span>
+                    <h2 class="text-4xl font-extrabold text-white mt-4 mb-6 leading-tight">
+                        Toko Digital <span class="text-gradient">Terpercaya</span> Untuk Kebutuhan Anda
+                    </h2>
+                    <p class="text-slate-400 leading-relaxed mb-10">
+                        Toko Ai hadir untuk memberikan kemudahan dalam mendapatkan berbagai produk digital berkualitas dan layanan pengembangan web profesional dengan harga terbaik. Kami berkomitmen memberikan layanan cepat, aman, dan memuaskan bagi ribuan pelanggan setia kami di seluruh Indonesia.
+                    </p>
+                    
+                    <div class="grid grid-cols-2 gap-8">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fa-solid fa-cart-circle-check text-blue-400 text-xl"></i>
+                                <span class="text-3xl font-black text-white">10K+</span>
+                            </div>
+                            <p class="text-slate-500 text-sm font-medium">Produk Terjual</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fa-solid fa-face-smile text-purple-400 text-xl"></i>
+                                <span class="text-3xl font-black text-white">5K+</span>
+                            </div>
+                            <p class="text-slate-500 text-sm font-medium">Pelanggan Puas</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fa-solid fa-shield-check text-emerald-400 text-xl"></i>
+                                <span class="text-3xl font-black text-white">100%</span>
+                            </div>
+                            <p class="text-slate-500 text-sm font-medium">Transaksi Aman</p>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <i class="fa-solid fa-headset text-amber-400 text-xl"></i>
+                                <span class="text-3xl font-black text-white">24/7</span>
+                            </div>
+                            <p class="text-slate-500 text-sm font-medium">Layanan Aktif</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="produk" class="py-24 bg-[#0a0118] relative">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 fade-up">
+                <div>
+                    <span class="text-blue-400 font-bold uppercase tracking-widest text-sm">Produk & Layanan</span>
+                    <h2 class="text-4xl font-extrabold text-white mt-2">Pilihan Solusi Digital</h2>
+                </div>
+                <button class="bg-white/5 hover:bg-blue-600 border border-white/10 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all">
+                    Lihat Semua Produk <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                <!-- Card 1 -->
+                <div class="product-card p-6 rounded-3xl fade-up">
+                    <div class="text-center">
+                        <div class="product-img-container zoom-left-top clickable-img">
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/mockup%20jasa%20buat%20website.png" alt="Jasa Pembuatan Website">
+                            <div class="img-overlay">
+                                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white text-sm mb-1">Jasa Pembuatan Website</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">Landing Page & Company Profile</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-bold text-blue-400 text-sm">Mulai Rp 499rb</span>
+                            <span class="text-amber-400 text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>5.0</span>
+                        </div>
+                    </div>
+                    <button class="btn-buy w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        Konsultasi Sekarang
+                    </button>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="product-card p-6 rounded-3xl fade-up">
+                    <div class="text-center">
+                        <div class="product-img-container zoom-left-top clickable-img">
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/mockup%20jasa%20buat%20aplikasi.png" alt="Jasa Pembuatan Aplikasi">
+                            <div class="img-overlay">
+                                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white text-sm mb-1">Jasa Pembuatan Aplikasi</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">Mobile App Android & iOS</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-bold text-blue-400 text-sm">Mulai Rp 2.499.000</span>
+                            <span class="text-amber-400 text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>5.0</span>
+                        </div>
+                    </div>
+                    <button class="btn-buy w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        Konsultasi Sekarang
+                    </button>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="product-card p-6 rounded-3xl fade-up">
+                    <div class="text-center">
+                        <div class="product-img-container zoom-left-top clickable-img">
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/mockup%20sulap%20foto%20pro.png" alt="Sulap Foto Pro">
+                            <div class="img-overlay">
+                                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white text-sm mb-1">Sulap Foto Pro</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">Edit Foto AI Professional</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-bold text-blue-400 text-sm">Rp 97.000</span>
+                            <span class="text-amber-400 text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>4.9</span>
+                        </div>
+                    </div>
+                    <button class="btn-buy w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-xs"></i> Beli Sekarang
+                    </button>
+                </div>
+
+                <!-- Card 4 -->
+                <div class="product-card p-6 rounded-3xl fade-up">
+                    <div class="text-center">
+                        <div class="product-img-container zoom-left-top clickable-img">
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/mockup%20sulap%20foto%20vip.png" alt="Sulap Foto VIP">
+                            <div class="img-overlay">
+                                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white text-sm mb-1">Sulap Foto VIP</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">Edit Foto AI Premium & High-Res</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-bold text-blue-400 text-sm">Rp 144.000</span>
+                            <span class="text-amber-400 text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>5.0</span>
+                        </div>
+                    </div>
+                    <button class="btn-buy w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-xs"></i> Beli Sekarang
+                    </button>
+                </div>
+
+                <!-- Card 5 -->
+                <div class="product-card p-6 rounded-3xl fade-up">
+                    <div class="text-center">
+                        <div class="product-img-container zoom-left-top clickable-img">
+                            <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/mockup%20sulap%20video.png" alt="Sulap Video">
+                            <div class="img-overlay">
+                                <i class="fa-solid fa-magnifying-glass-plus text-2xl"></i>
+                            </div>
+                        </div>
+                        <h3 class="font-bold text-white text-sm mb-1">Sulap Video</h3>
+                        <p class="text-slate-400 text-[10px] mb-4">Edit & Enhancer Video AI</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <span class="font-bold text-blue-400 text-sm">Rp 97.000</span>
+                            <span class="text-amber-400 text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>5.0</span>
+                        </div>
+                    </div>
+                    <button class="btn-buy w-full py-2.5 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-cart-plus text-xs"></i> Beli Sekarang
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section id="testimoni" class="py-24 bg-[#0d0221] overflow-hidden">
+        <div class="container mx-auto px-6 text-center mb-16 fade-up">
+            <span class="text-blue-400 font-bold uppercase tracking-widest text-sm">Testimoni Pembeli</span>
+            <h2 class="text-4xl font-extrabold text-white mt-2">Apa Kata <span class="text-gradient">Mereka?</span></h2>
+        </div>
+
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white/5 p-8 rounded-[32px] border border-white/5 relative fade-up">
+                    <i class="fa-solid fa-quote-right absolute top-8 right-8 text-white/5 text-4xl"></i>
+                    <div class="flex gap-1 text-amber-400 mb-6">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Layanan pembuatan aplikasi dari Toko Ai luar biasa! UI/UX sangat modern dan fitur berjalan lancar di Android & iOS.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center overflow-hidden border border-blue-500/30">
+                            <i class="fa-solid fa-user text-2xl text-blue-400 mt-2"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-white">Andi Pratama</h4>
+                            <p class="text-xs text-slate-500">Business Owner</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 p-8 rounded-[32px] border border-white/5 relative fade-up">
+                    <i class="fa-solid fa-quote-right absolute top-8 right-8 text-white/5 text-4xl"></i>
+                    <div class="flex gap-1 text-amber-400 mb-6">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Sudah langganan di Toko Ai. Aman, cepat, dan terpercaya. Semua lisensi produk yang saya beli aktif tanpa kendala selamanya.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center overflow-hidden border border-purple-500/30">
+                            <i class="fa-solid fa-user text-2xl text-purple-400 mt-2"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-white">Siti Nurhaliza</h4>
+                            <p class="text-xs text-slate-500">Graphic Designer</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white/5 p-8 rounded-[32px] border border-white/5 relative fade-up">
+                    <i class="fa-solid fa-quote-right absolute top-8 right-8 text-white/5 text-4xl"></i>
+                    <div class="flex gap-1 text-amber-400 mb-6">
+                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                    </div>
+                    <p class="text-slate-400 mb-8 leading-relaxed">
+                        Harga sangat terjangkau dibandingkan tempat lain. Kualitas layanannya bintang lima, adminnya sangat sabar menjelaskan.
+                    </p>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center overflow-hidden border border-emerald-500/30">
+                            <i class="fa-solid fa-user text-2xl text-emerald-400 mt-2"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-white">Dimas Setiawan</h4>
+                            <p class="text-xs text-slate-500">Tech Freelancer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="kontak" class="py-24 container mx-auto px-6">
+        <div class="text-center mb-16 fade-up">
+            <span class="text-blue-400 font-bold uppercase tracking-widest text-sm">Hubungi Kami</span>
+            <h2 class="text-4xl font-extrabold text-white mt-2">Kami Siap <span class="text-gradient">Membantu</span> Anda</h2>
+            <p class="text-slate-400 mt-4">Punya pertanyaan atau butuh konsultasi produk & layanan? Hubungi kami segera.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <a href="https://wa.me/6285727041606" target="_blank" class="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer fade-up">
+                <div class="w-14 h-14 bg-green-500/20 text-green-400 rounded-2xl flex items-center justify-center text-2xl border border-green-500/30">
+                    <i class="fa-brands fa-whatsapp"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">WhatsApp</h4>
+                    <p class="text-slate-500 text-xs">0857-2704-1606</p>
+                </div>
+            </a>
+            <div class="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer fade-up">
+                <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center text-2xl border border-blue-500/30">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Email</h4>
+                    <p class="text-slate-500 text-xs">support@tokoai.id</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer fade-up">
+                <div class="w-14 h-14 bg-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center text-2xl border border-purple-500/30">
+                    <i class="fa-solid fa-comments"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Live Chat</h4>
+                    <p class="text-slate-500 text-xs">Tersedia 24/7</p>
+                </div>
+            </div>
+            <div class="p-6 bg-white/5 border border-white/10 rounded-3xl flex items-center gap-4 hover:bg-white/10 transition-all cursor-pointer fade-up">
+                <div class="w-14 h-14 bg-pink-500/20 text-pink-400 rounded-2xl flex items-center justify-center text-2xl border border-pink-500/30">
+                    <i class="fa-brands fa-instagram"></i>
+                </div>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Instagram</h4>
+                    <p class="text-slate-500 text-xs">@tokoai.id</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-[#05010d] pt-20 pb-10 text-white">
+        <div class="container mx-auto px-6 grid md:grid-cols-4 gap-12 mb-20">
+            <div class="col-span-1">
+                <div class="flex items-center gap-3 mb-6">
+                    <img src="https://bfztctlqotlbvighdtms.supabase.co/storage/v1/object/public/tokoai/logo_create_1777220601138_0.png" alt="Footer Logo" class="w-10 h-10 object-contain rounded-md">
+                    <span class="text-xl font-extrabold tracking-tight">tokoai<span class="text-blue-400">.id</span></span>
+                </div>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                    Toko digital terpercaya untuk berbagai kebutuhan produk digital dan jasa pembuatan website/aplikasi Anda. Cepat, aman, dan berkualitas.
+                </p>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-blue-600 transition-all border border-white/10">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-pink-600 transition-all border border-white/10">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-blue-600 transition-all border border-white/10">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-6">Menu</h4>
+                <ul class="space-y-4 text-slate-400 text-sm">
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">Beranda</a></li>
+                    <li><a href="#produk" class="hover:text-blue-400 transition-colors">Produk</a></li>
+                    <li><a href="#testimoni" class="hover:text-blue-400 transition-colors">Testimoni</a></li>
+                    <li><a href="#kontak" class="hover:text-blue-400 transition-colors">Hubungi Kami</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-6">Informasi</h4>
+                <ul class="space-y-4 text-slate-400 text-sm">
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">Syarat & Ketentuan</a></li>
+                    <li><a href="#" class="hover:text-blue-400 transition-colors">Kebijakan Privasi</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold mb-6">Metode Pembayaran</h4>
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="payment-chip">OVO</div>
+                    <div class="payment-chip">DANA</div>
+                    <div class="payment-chip text-[10px]">GOPAY</div>
+                    <div class="payment-chip">QRIS</div>
+                    <div class="payment-chip">BCA</div>
+                    <div class="payment-chip text-[9px]">MANDIRI</div>
+                    <div class="payment-chip">BNI</div>
+                    <div class="payment-chip">BRI</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mx-auto px-6 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-slate-500 text-xs gap-4">
+            <p>&copy; 2024 Toko Ai. All rights reserved.</p>
+            <p>Timotius Ega Widyawan</p>
+        </div>
+    </footer>
+
+    <!-- Image Preview Modal -->
+    <div id="imageModal" class="fixed inset-0 z-[100] hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-4 cursor-zoom-out">
+        <div class="relative max-w-5xl w-full flex items-center justify-center">
+            <button id="closeModal" class="absolute -top-12 right-0 text-white text-4xl hover:text-blue-400 transition-colors z-[110]">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <img id="modalImg" src="" class="max-w-full max-h-[85vh] rounded-2xl shadow-2xl object-contain modal-enter">
+        </div>
+    </div>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".fade-up");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("visible");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        window.addEventListener("load", reveal);
+
+        window.addEventListener("scroll", function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-2xl');
+                nav.classList.remove('py-4');
+                nav.classList.add('py-2');
+            } else {
+                nav.classList.remove('shadow-2xl');
+                nav.classList.remove('py-2');
+                nav.classList.add('py-4');
+            }
+        });
+
+        const buyButtons = document.querySelectorAll('.btn-buy');
+        buyButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const productCard = this.closest('.product-card');
+                const productTitle = productCard.querySelector('h3').innerText.trim();
+                const text = this.innerText.trim();
+                
+                const waProducts = [
+                    "Sulap Foto Pro", 
+                    "Sulap Foto VIP", 
+                    "Sulap Video", 
+                    "Sulap Suara", 
+                    "Cap Cut PRO", 
+                    "Canva Pro Lifetime"
+                ];
+                
+                const isWaProduct = waProducts.includes(productTitle);
+                const isConsultation = text === 'Konsultasi Sekarang';
+                
+                if(isConsultation || isWaProduct) {
+                    let waText = "";
+                    if(isConsultation) {
+                        waText = encodeURIComponent(`Halo Toko Ai, saya ingin berkonsultasi mengenai jasa: ${productTitle}`);
+                    } else {
+                        waText = encodeURIComponent(`Halo Toko Ai, saya ingin memesan produk: ${productTitle}. Mohon info langkah selanjutnya.`);
+                    }
+                    window.open(`https://wa.me/6285727041606?text=${waText}`, '_blank');
+                    return;
+                }
+
+                const originalContent = this.innerHTML;
+                this.innerHTML = '<i class="fa-solid fa-check text-xs"></i> Berhasil';
+                this.classList.add('bg-green-600', 'text-white');
+                this.style.borderColor = 'transparent';
+                
+                setTimeout(() => {
+                    this.innerHTML = originalContent;
+                    this.classList.remove('bg-green-600', 'text-white');
+                    this.style.borderColor = '';
+                }, 2000);
+            });
+        });
+
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImg');
+        const closeModal = document.getElementById('closeModal');
+        const clickableImages = document.querySelectorAll('.clickable-img, .product-img-container');
+
+        clickableImages.forEach(container => {
+            container.addEventListener('click', function(e) {
+                if(e.target.closest('.btn-buy')) return;
+
+                let imgSrc = '';
+                const img = this.querySelector('img');
+                
+                if(img) {
+                    imgSrc = img.src;
+                } else if(this.tagName === 'IMG') {
+                    imgSrc = this.src;
+                }
+                
+                if(imgSrc) {
+                    modalImg.src = imgSrc;
+                    modal.classList.remove('hidden');
+                    modal.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        function closeImageModal() {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        closeModal.addEventListener('click', closeImageModal);
+        modal.addEventListener('click', (e) => {
+            if(e.target === modal || e.target.closest('#closeModal')) {
+                closeImageModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') closeImageModal();
+        });
+    </script>
+</body>
+</html>
